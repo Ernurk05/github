@@ -1,32 +1,70 @@
-# Prerequisites
-*.d
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <string>
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+using namespace std;
 
-# Precompiled Headers
-*.gch
-*.pch
+int main() {
+    setlocale(LC_ALL, "ru");
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+    cout << "Введите текст: " << endl;
+    string text;
+    getline(cin, text);
 
-# Fortran module files
-*.mod
-*.smod
+    ofstream output_file("input.txt");
+    if (!output_file.is_open()) {
+        cerr << "Файл не удалось открыть для записи." << endl;
+        return 1;
+    }
+    output_file << text;
+    output_file.close();
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+    cout << "Озгермеген матин : " << endl << text << endl;
 
-# Executables
-*.exe
-*.out
-*.app
+    cout << "Ауыстыруга арналган опцияны танданыз: " << endl;
+    cout << "1.Жеке танбаларды ауыстырыныз" << endl;
+    cout << "2. Букіл создерді ауыстырыныз" << endl;
+    cout << "3. Барлык создерді санау " << endl;
+
+    int option;
+    cin >> option;
+
+    if (option == 1) {
+        char old_char, new_char;
+        cout << "ески танбаны енгизиниз : ";
+        cin >> old_char;
+        cout << "жана синвол енгизиниз: ";
+        cin >> new_char;
+        replace(text.begin(), text.end(), old_char, new_char);
+    } else if (option == 2) {
+        string old_word, new_word;
+        cout << "ески созди енгиз ";
+        cin >> old_word;
+        cout << "жана созди созди енгизиниз : ";
+        cin >> new_word;
+        size_t pos = 0;
+        while ((pos = text.find(old_word, pos)) != string::npos) {
+            text.replace(pos, old_word.length(), new_word);
+            pos += new_word.length();
+        }
+    } else if (option == 3) {
+        int word_count = count(text.begin(), text.end(), ' ') + 1;
+        cout << "Жалпы соз саны : " << word_count << endl;
+    } else {
+        cerr << "Жарамсыз операция тандалды." << endl;
+        return 1;
+    }
+
+    output_file.open("input.txt");
+    if (!output_file.is_open()) {
+        cerr << "Файл не удалось открыть для записи." << endl;
+        return 1;
+    }
+    output_file << text;
+    output_file.close();
+
+    cout << "Онделген матин : " << endl << text << endl;
+
+    return 0;
+}
